@@ -6,7 +6,7 @@ import java.nio.ByteBuffer;
 
 import org.apache.pulsar.functions.api.Context;
 import org.apache.pulsar.functions.api.Function;
-
+import org.dmg.pmml.DataType;
 import org.dmg.pmml.FieldName;
 import org.jpmml.evaluator.ModelEvaluatorBuilder;
 import org.jpmml.evaluator.Evaluator;
@@ -44,7 +44,7 @@ public class RegressionFunction implements Function<String, String> {
                                 // Construct the input to the model
                                 Map<FieldName, FieldValue> featureVector = new LinkedHashMap<>();
                                 InputField inputField = inputFields.get(0);
-                                featureVector.put(inputField.getName(), inputField.prepare(Double.valueOf(input)));
+                                featureVector.put(inputField.getName(), inputField.prepare(input));
 
                                 // Evaluate the model on the inputs
                                 Map<FieldName, ?> results = evaluator.evaluate(featureVector);
