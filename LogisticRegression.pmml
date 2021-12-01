@@ -1,0 +1,241 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<PMML xmlns="http://www.dmg.org/PMML-4_4" xmlns:data="http://jpmml.org/jpmml-model/InlineTable" version="4.4">
+	<Header>
+		<Application name="JPMML-SkLearn" version="1.6.33"/>
+		<Timestamp>2021-11-24T00:40:15Z</Timestamp>
+	</Header>
+	<MiningBuildTask>
+		<Extension name="repr">PMMLPipeline(steps=[('vectorizer', CountVectorizer()),
+       ('classifier', OneVsRestClassifier(estimator=LogisticRegression()))])</Extension>
+	</MiningBuildTask>
+	<DataDictionary>
+		<DataField name="y" optype="categorical" dataType="integer">
+			<Value value="0"/>
+			<Value value="1"/>
+			<Value value="2"/>
+			<Value value="3"/>
+			<Value value="4"/>
+		</DataField>
+		<DataField name="original" optype="categorical" dataType="string"/>
+	</DataDictionary>
+	<TransformationDictionary>
+		<DefineFunction name="tf(lowercase(original))" optype="continuous" dataType="integer">
+			<ParameterField name="document"/>
+			<ParameterField name="term"/>
+			<TextIndex textField="document" x-wordRE="(?u)\b\w\w+\b">
+				<FieldRef field="term"/>
+			</TextIndex>
+		</DefineFunction>
+	</TransformationDictionary>
+	<MiningModel functionName="classification" algorithmName="sklearn.multiclass.OneVsRestClassifier">
+		<MiningSchema>
+			<MiningField name="y" usageType="target"/>
+			<MiningField name="original"/>
+		</MiningSchema>
+		<LocalTransformations>
+			<DerivedField name="lowercase(original)" optype="categorical" dataType="string">
+				<Apply function="lowercase">
+					<FieldRef field="original"/>
+				</Apply>
+			</DerivedField>
+			<DerivedField name="tf(lowercase(original), ate)" optype="continuous" dataType="integer">
+				<Apply function="tf(lowercase(original))">
+					<FieldRef field="lowercase(original)"/>
+					<Constant dataType="string">ate</Constant>
+				</Apply>
+			</DerivedField>
+			<DerivedField name="tf(lowercase(original), chased)" optype="continuous" dataType="integer">
+				<Apply function="tf(lowercase(original))">
+					<FieldRef field="lowercase(original)"/>
+					<Constant dataType="string">chased</Constant>
+				</Apply>
+			</DerivedField>
+			<DerivedField name="tf(lowercase(original), chicken)" optype="continuous" dataType="integer">
+				<Apply function="tf(lowercase(original))">
+					<FieldRef field="lowercase(original)"/>
+					<Constant dataType="string">chicken</Constant>
+				</Apply>
+			</DerivedField>
+			<DerivedField name="tf(lowercase(original), fox)" optype="continuous" dataType="integer">
+				<Apply function="tf(lowercase(original))">
+					<FieldRef field="lowercase(original)"/>
+					<Constant dataType="string">fox</Constant>
+				</Apply>
+			</DerivedField>
+			<DerivedField name="tf(lowercase(original), snake)" optype="continuous" dataType="integer">
+				<Apply function="tf(lowercase(original))">
+					<FieldRef field="lowercase(original)"/>
+					<Constant dataType="string">snake</Constant>
+				</Apply>
+			</DerivedField>
+			<DerivedField name="tf(lowercase(original), woke)" optype="continuous" dataType="integer">
+				<Apply function="tf(lowercase(original))">
+					<FieldRef field="lowercase(original)"/>
+					<Constant dataType="string">woke</Constant>
+				</Apply>
+			</DerivedField>
+		</LocalTransformations>
+		<Segmentation multipleModelMethod="modelChain" missingPredictionTreatment="returnMissing">
+			<Segment id="1">
+				<True/>
+				<RegressionModel functionName="classification" algorithmName="sklearn.linear_model._logistic.LogisticRegression" normalizationMethod="logit">
+					<MiningSchema>
+						<MiningField name="tf(lowercase(original), ate)"/>
+						<MiningField name="tf(lowercase(original), chased)"/>
+						<MiningField name="tf(lowercase(original), chicken)"/>
+						<MiningField name="tf(lowercase(original), fox)"/>
+						<MiningField name="tf(lowercase(original), snake)"/>
+						<MiningField name="tf(lowercase(original), woke)"/>
+					</MiningSchema>
+					<Output>
+						<OutputField name="decisionFunction(0)" optype="continuous" dataType="double" feature="probability" value="0"/>
+					</Output>
+					<RegressionTable intercept="0.7527607057939386" targetCategory="0">
+						<NumericPredictor name="tf(lowercase(original), ate)" coefficient="0.22941047570064546"/>
+						<NumericPredictor name="tf(lowercase(original), chased)" coefficient="0.22941047570064546"/>
+						<NumericPredictor name="tf(lowercase(original), chicken)" coefficient="0.4588209514012909"/>
+						<NumericPredictor name="tf(lowercase(original), fox)" coefficient="-0.22944310197575787"/>
+						<NumericPredictor name="tf(lowercase(original), snake)" coefficient="-0.22944310197575787"/>
+						<NumericPredictor name="tf(lowercase(original), woke)" coefficient="-0.45885357767640333"/>
+					</RegressionTable>
+					<RegressionTable intercept="0.0" targetCategory="(other)"/>
+				</RegressionModel>
+			</Segment>
+			<Segment id="2">
+				<True/>
+				<RegressionModel functionName="classification" algorithmName="sklearn.linear_model._logistic.LogisticRegression" normalizationMethod="logit">
+					<MiningSchema>
+						<MiningField name="tf(lowercase(original), ate)"/>
+						<MiningField name="tf(lowercase(original), chased)"/>
+						<MiningField name="tf(lowercase(original), chicken)"/>
+						<MiningField name="tf(lowercase(original), fox)"/>
+						<MiningField name="tf(lowercase(original), snake)"/>
+						<MiningField name="tf(lowercase(original), woke)"/>
+					</MiningSchema>
+					<Output>
+						<OutputField name="decisionFunction(1)" optype="continuous" dataType="double" feature="probability" value="1"/>
+					</Output>
+					<RegressionTable intercept="-0.7527607057939384" targetCategory="1">
+						<NumericPredictor name="tf(lowercase(original), ate)" coefficient="0.45885357767640333"/>
+						<NumericPredictor name="tf(lowercase(original), chased)" coefficient="-0.22941047570064546"/>
+						<NumericPredictor name="tf(lowercase(original), chicken)" coefficient="0.2294431019757579"/>
+						<NumericPredictor name="tf(lowercase(original), fox)" coefficient="0.2294431019757579"/>
+						<NumericPredictor name="tf(lowercase(original), snake)" coefficient="-0.4588209514012909"/>
+						<NumericPredictor name="tf(lowercase(original), woke)" coefficient="-0.22941047570064546"/>
+					</RegressionTable>
+					<RegressionTable intercept="0.0" targetCategory="(other)"/>
+				</RegressionModel>
+			</Segment>
+			<Segment id="3">
+				<True/>
+				<RegressionModel functionName="classification" algorithmName="sklearn.linear_model._logistic.LogisticRegression" normalizationMethod="logit">
+					<MiningSchema>
+						<MiningField name="tf(lowercase(original), ate)"/>
+						<MiningField name="tf(lowercase(original), chased)"/>
+						<MiningField name="tf(lowercase(original), chicken)"/>
+						<MiningField name="tf(lowercase(original), fox)"/>
+						<MiningField name="tf(lowercase(original), snake)"/>
+						<MiningField name="tf(lowercase(original), woke)"/>
+					</MiningSchema>
+					<Output>
+						<OutputField name="decisionFunction(2)" optype="continuous" dataType="double" feature="probability" value="2"/>
+					</Output>
+					<RegressionTable intercept="-0.7527607057939384" targetCategory="2">
+						<NumericPredictor name="tf(lowercase(original), ate)" coefficient="-0.22941047570064546"/>
+						<NumericPredictor name="tf(lowercase(original), chased)" coefficient="0.45885357767640333"/>
+						<NumericPredictor name="tf(lowercase(original), chicken)" coefficient="0.2294431019757579"/>
+						<NumericPredictor name="tf(lowercase(original), fox)" coefficient="-0.4588209514012909"/>
+						<NumericPredictor name="tf(lowercase(original), snake)" coefficient="0.2294431019757579"/>
+						<NumericPredictor name="tf(lowercase(original), woke)" coefficient="-0.22941047570064546"/>
+					</RegressionTable>
+					<RegressionTable intercept="0.0" targetCategory="(other)"/>
+				</RegressionModel>
+			</Segment>
+			<Segment id="4">
+				<True/>
+				<RegressionModel functionName="classification" algorithmName="sklearn.linear_model._logistic.LogisticRegression" normalizationMethod="logit">
+					<MiningSchema>
+						<MiningField name="tf(lowercase(original), ate)"/>
+						<MiningField name="tf(lowercase(original), chased)"/>
+						<MiningField name="tf(lowercase(original), chicken)"/>
+						<MiningField name="tf(lowercase(original), fox)"/>
+						<MiningField name="tf(lowercase(original), snake)"/>
+						<MiningField name="tf(lowercase(original), woke)"/>
+					</MiningSchema>
+					<Output>
+						<OutputField name="decisionFunction(3)" optype="continuous" dataType="double" feature="probability" value="3"/>
+					</Output>
+					<RegressionTable intercept="0.7527607057939384" targetCategory="3">
+						<NumericPredictor name="tf(lowercase(original), ate)" coefficient="0.22941047570064546"/>
+						<NumericPredictor name="tf(lowercase(original), chased)" coefficient="-0.45885357767640333"/>
+						<NumericPredictor name="tf(lowercase(original), chicken)" coefficient="-0.2294431019757579"/>
+						<NumericPredictor name="tf(lowercase(original), fox)" coefficient="0.4588209514012909"/>
+						<NumericPredictor name="tf(lowercase(original), snake)" coefficient="-0.2294431019757579"/>
+						<NumericPredictor name="tf(lowercase(original), woke)" coefficient="0.22941047570064546"/>
+					</RegressionTable>
+					<RegressionTable intercept="0.0" targetCategory="(other)"/>
+				</RegressionModel>
+			</Segment>
+			<Segment id="5">
+				<True/>
+				<RegressionModel functionName="classification" algorithmName="sklearn.linear_model._logistic.LogisticRegression" normalizationMethod="logit">
+					<MiningSchema>
+						<MiningField name="tf(lowercase(original), ate)"/>
+						<MiningField name="tf(lowercase(original), chased)"/>
+						<MiningField name="tf(lowercase(original), chicken)"/>
+						<MiningField name="tf(lowercase(original), fox)"/>
+						<MiningField name="tf(lowercase(original), snake)"/>
+						<MiningField name="tf(lowercase(original), woke)"/>
+					</MiningSchema>
+					<Output>
+						<OutputField name="decisionFunction(4)" optype="continuous" dataType="double" feature="probability" value="4"/>
+					</Output>
+					<RegressionTable intercept="-0.7527607057939386" targetCategory="4">
+						<NumericPredictor name="tf(lowercase(original), ate)" coefficient="-0.22941047570064546"/>
+						<NumericPredictor name="tf(lowercase(original), chased)" coefficient="-0.22941047570064546"/>
+						<NumericPredictor name="tf(lowercase(original), chicken)" coefficient="-0.4588209514012909"/>
+						<NumericPredictor name="tf(lowercase(original), fox)" coefficient="0.22944310197575787"/>
+						<NumericPredictor name="tf(lowercase(original), snake)" coefficient="0.22944310197575787"/>
+						<NumericPredictor name="tf(lowercase(original), woke)" coefficient="0.45885357767640333"/>
+					</RegressionTable>
+					<RegressionTable intercept="0.0" targetCategory="(other)"/>
+				</RegressionModel>
+			</Segment>
+			<Segment id="6">
+				<True/>
+				<RegressionModel functionName="classification" normalizationMethod="simplemax">
+					<MiningSchema>
+						<MiningField name="y" usageType="target"/>
+						<MiningField name="decisionFunction(0)"/>
+						<MiningField name="decisionFunction(1)"/>
+						<MiningField name="decisionFunction(2)"/>
+						<MiningField name="decisionFunction(3)"/>
+						<MiningField name="decisionFunction(4)"/>
+					</MiningSchema>
+					<Output>
+						<OutputField name="probability(0)" optype="continuous" dataType="double" feature="probability" value="0"/>
+						<OutputField name="probability(1)" optype="continuous" dataType="double" feature="probability" value="1"/>
+						<OutputField name="probability(2)" optype="continuous" dataType="double" feature="probability" value="2"/>
+						<OutputField name="probability(3)" optype="continuous" dataType="double" feature="probability" value="3"/>
+						<OutputField name="probability(4)" optype="continuous" dataType="double" feature="probability" value="4"/>
+					</Output>
+					<RegressionTable intercept="0.0" targetCategory="0">
+						<NumericPredictor name="decisionFunction(0)" coefficient="1.0"/>
+					</RegressionTable>
+					<RegressionTable intercept="0.0" targetCategory="1">
+						<NumericPredictor name="decisionFunction(1)" coefficient="1.0"/>
+					</RegressionTable>
+					<RegressionTable intercept="0.0" targetCategory="2">
+						<NumericPredictor name="decisionFunction(2)" coefficient="1.0"/>
+					</RegressionTable>
+					<RegressionTable intercept="0.0" targetCategory="3">
+						<NumericPredictor name="decisionFunction(3)" coefficient="1.0"/>
+					</RegressionTable>
+					<RegressionTable intercept="0.0" targetCategory="4">
+						<NumericPredictor name="decisionFunction(4)" coefficient="1.0"/>
+					</RegressionTable>
+				</RegressionModel>
+			</Segment>
+		</Segmentation>
+	</MiningModel>
+</PMML>
